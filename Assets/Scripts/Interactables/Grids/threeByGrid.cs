@@ -20,11 +20,8 @@ public class threeByGrid : MonoBehaviour {
 
     Color draggedColor = new Color(0, 0.08f, 1, 0.42f);
 
-    void Awake() {
-        addToGridList();    
-    }
-
     void Start(){
+        addToGridList(); 
         sprite = GetComponent<SpriteRenderer>();
         collider = GetComponent<Collider2D>();
     }

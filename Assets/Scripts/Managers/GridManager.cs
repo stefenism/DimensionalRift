@@ -118,7 +118,8 @@ public class GridManager : MonoBehaviour {
             gridDaddy.reset_copy();            
         }        
     }
-    static public void addThreeBy(threeByGrid newGrid){        
+    static public void addThreeBy(threeByGrid newGrid){
+        Debug.Log("gonna add a three by");
         if(!gridDaddy.threeByList.Contains(newGrid)){            
             gridDaddy.threeByList.Add(newGrid);
         }        
