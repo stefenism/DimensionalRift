@@ -13,8 +13,8 @@ public class Tile : MonoBehaviour{
     Collider2D collider;
     TileState tileState = TileState.IDLE;
 
-    Color defaultColor = new Color(1f,1f,1f);
-    Color selectedColor = new Color(0.95f,0.875f,0, 0.42f);
+    Color defaultColor = new Color(1, 1, 1, 1);
+    Color selectedColor = new Color(0.48f, 1, 0, 1);
 
     void Start(){
         sprite = GetComponent<SpriteRenderer>();
