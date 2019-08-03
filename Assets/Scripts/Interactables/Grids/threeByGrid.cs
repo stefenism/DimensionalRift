@@ -7,6 +7,7 @@ public class threeByGrid : MonoBehaviour {
     enum GridState{
         IDLE,
         MOUSEOVER,
+        SELECTED,
         DRAGGED,
     }
 
@@ -16,6 +17,8 @@ public class threeByGrid : MonoBehaviour {
 
     Color defaultColor = new Color(0.95f, 0.875f, 0, 0);
     Color selectedColor = new Color(0.95f, 0.875f, 0, 0.42f);
+
+    Color draggedColor = new Color(0, 0.08f, 1, 0.42f);
 
     void Awake() {
         addToGridList();    
@@ -32,10 +35,14 @@ public class threeByGrid : MonoBehaviour {
             CheckMouseClick();
             checkMouseDrop();
             if(isDragged()){
-                transform.position = MouseUtilities.getMouseWorldPosition();
+                transform.position = GridManager.getClosestPosition();
+                doDraggedState();
             }
-            else{
-                CheckMouseOver();
+            else if(isSelected()){
+                doSelectedState();
+            }
+            else{                
+                CheckMouseOver();                
             }
         }
     }
@@ -62,6 +69,7 @@ public class threeByGrid : MonoBehaviour {
         else if(isDragged()){
             if(Input.GetMouseButtonDown(0)){
                 setGridIdle();
+                GridManager.setCurrentThreeBy(null);
             }
         }
     }
@@ -69,7 +77,8 @@ public class threeByGrid : MonoBehaviour {
     void checkMouseDrop(){
         if(Input.GetMouseButtonDown(1)){
                 if(GridManager.getCurrentThreeBy() == this){
-                    GridManager.setCurrentThreeBy(null);
+                    GridManager.removeCopiedThreeBy();
+                    GridManager.setCurrentThreeBy(null);                    
                 }
             }
     }
@@ -82,6 +91,14 @@ public class threeByGrid : MonoBehaviour {
         sprite.color = selectedColor;
     }
 
+    void doDraggedState(){
+        sprite.color = draggedColor;
+    }
+
+    void doSelectedState(){
+        sprite.color = selectedColor;
+    }
+
     public bool isGridAtPosition(Vector3 position){
         if(transform.position == position){
             return true;
@@ -89,11 +106,14 @@ public class threeByGrid : MonoBehaviour {
         return false;
     }
 
+    public bool isIdle(){return gridState == GridState.IDLE;}
     public bool isMouseOver(){return gridState == GridState.MOUSEOVER;}
+    public bool isSelected(){return gridState == GridState.SELECTED;}
     public bool isDragged(){return gridState == GridState.DRAGGED;}
 
     public void setGridIdle(){gridState = GridState.IDLE;}
     public void setGridMouseOver(){gridState = GridState.MOUSEOVER;}
+    public void setGridSelected(){gridState = GridState.SELECTED;}
     public void setGridDragged(){gridState = GridState.DRAGGED;}
     
     public Vector2 getGridPosition(){return (Vector2)transform.position;}

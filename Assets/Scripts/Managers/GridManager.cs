@@ -36,10 +36,68 @@ public class GridManager : MonoBehaviour {
     }
 
     void getAvailablePlacementPositions(){
-
+        foreach(threeByGrid g in gridDaddy.threeByList){
+            gridDaddy.addAdjacentGridPositions(g);
+        }
+        for(int i = gridDaddy.placementPositions.Count - 1; i >= 0; i--){
+            if(gridDaddy.placementPositions[i] == gridDaddy.selectedThreeBy.transform.position){
+                gridDaddy.placementPositions.RemoveAt(i);
+            }
+        }        
     }
 
-    void removeCopiedThreeBy(){
+    void reset_copy(){
+        Debug.Log("resetting copy");        
+        gridDaddy.selectedThreeBy.setGridIdle();
+        // gridDaddy.removeCopiedThreeBy();
+        gridDaddy.placementPositions.Clear();
+        gridDaddy.copiedThreeBy = null;
+        gridDaddy.selectedThreeBy = null;
+    }
+
+    void cancel_copy(){
+        removeCopiedThreeBy();        
+    }
+
+    static public Vector3 getClosestPosition(){
+        Vector3 closestPosition = Vector3.zero;
+        float smallestDistance = Mathf.Infinity;
+        float distance = 0;
+
+        foreach(Vector3 v in gridDaddy.placementPositions){
+            distance = Mathf.Abs(((Vector3)MouseUtilities.getMouseWorldPosition() - v).magnitude);
+            if(distance < smallestDistance){
+                smallestDistance = distance;
+                closestPosition = v;
+            }
+        }
+
+        return closestPosition;
+    }
+
+    void addAdjacentGridPositions(threeByGrid gridToCheck){
+        Vector3 currentPosition = gridToCheck.transform.position;        
+        Vector3 up = new Vector3(currentPosition.x, currentPosition.y -3, currentPosition.z);
+        Vector3 down = new Vector3(currentPosition.x, currentPosition.y + 3, currentPosition.z);
+        Vector3 left = new Vector3(currentPosition.x -3, currentPosition.y, currentPosition.z);
+        Vector3 right = new Vector3(currentPosition.x + 3, currentPosition.y, currentPosition.z);
+
+        if(!gridDaddy.placementPositions.Contains(up) && gridDaddy.gridContainer.isInMap(up)){
+            gridDaddy.placementPositions.Add(up);
+        }
+        if(!gridDaddy.placementPositions.Contains(down) && gridDaddy.gridContainer.isInMap(down)){
+            gridDaddy.placementPositions.Add(down);
+        }
+        if(!gridDaddy.placementPositions.Contains(left) && gridDaddy.gridContainer.isInMap(left)){
+            gridDaddy.placementPositions.Add(left);
+        }
+        if(!gridDaddy.placementPositions.Contains(right) && gridDaddy.gridContainer.isInMap(right)){
+            gridDaddy.placementPositions.Add(right);
+        }
+    }
+
+    static public void removeCopiedThreeBy(){
+        gridDaddy.threeByList.Remove(gridDaddy.copiedThreeBy);
         Destroy(gridDaddy.copiedThreeBy.gameObject);
         gridDaddy.copiedThreeBy = null;
     }
@@ -48,20 +106,20 @@ public class GridManager : MonoBehaviour {
 
     static public threeByGrid getCurrentThreeBy(){return gridDaddy.selectedThreeBy;}
     static public void setCurrentThreeBy(threeByGrid selectedGrid){
-        gridDaddy.selectedThreeBy = selectedGrid;        
-        if(selectedGrid == null){
-            gridDaddy.removeCopiedThreeBy();
-        }
-        else{
+        Debug.Log("got into setcurrent three by with: " + selectedGrid);
+        if(selectedGrid != null){
+            gridDaddy.selectedThreeBy = selectedGrid;
             gridDaddy.cloneCurrentThreeBy(selectedGrid);
             gridDaddy.getAvailablePlacementPositions();
-        }
+            selectedGrid.setGridSelected();
+        }                
+        if(selectedGrid == null){
+            Debug.Log("send in null => reset copy");
+            gridDaddy.reset_copy();            
+        }        
     }
-    static public void addThreeBy(threeByGrid newGrid){
-        Debug.Log("adding a three by");
-        Debug.Log("griddaddy is: " + gridDaddy.gameObject.name);
-        if(!gridDaddy.threeByList.Contains(newGrid)){
-            Debug.Log("adding a grid");
+    static public void addThreeBy(threeByGrid newGrid){        
+        if(!gridDaddy.threeByList.Contains(newGrid)){            
             gridDaddy.threeByList.Add(newGrid);
         }        
     }
