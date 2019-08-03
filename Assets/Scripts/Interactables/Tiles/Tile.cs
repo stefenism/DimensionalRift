@@ -18,7 +18,7 @@ public class Tile : MonoBehaviour{
 
     void Start(){
         sprite = GetComponent<SpriteRenderer>();
-        Collider = GetComponent<Collider2D>();
+        collider = GetComponent<Collider2D>();
     }
 
     void Update () {
