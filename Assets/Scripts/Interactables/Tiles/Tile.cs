@@ -7,6 +7,7 @@ public class Tile : MonoBehaviour{
     enum TileState{
         IDLE,
         MOUSEOVER,
+        MOVEABLE,
     }
 
     SpriteRenderer sprite;
@@ -15,8 +16,9 @@ public class Tile : MonoBehaviour{
 
     Color defaultColor = new Color(1, 1, 1, 1);
     Color selectedColor = new Color(0.48f, 1, 0, 1);
+    Color moveableColor = new Color(1, 0.45f, 0, 1);
 
-    Actor containedActor;
+    public Actor containedActor;
 
     void Start(){
         sprite = GetComponent<SpriteRenderer>();
@@ -25,7 +27,13 @@ public class Tile : MonoBehaviour{
 
     void Update () {
         if(GameManager.gameDaddy.isPlayerTurn()){
-            CheckMouseOver();
+            if(HeroManager.heroDaddy.selectedHero == null){
+                CheckMouseOver();
+                //THIS WILL HAVE TO CHANGE
+            }            
+            if(isMoveable()){
+                doTileMoveable();
+            }
         }        
     }
 
@@ -35,8 +43,10 @@ public class Tile : MonoBehaviour{
             doMouseOverState();
         }
         else{
-            tileState = TileState.IDLE;
-            doIdleState();
+            if(tileState != TileState.MOVEABLE){
+                tileState = TileState.IDLE;
+                doIdleState();
+            }            
         }
     }
 
@@ -55,6 +65,13 @@ public class Tile : MonoBehaviour{
         }
     }
 
+    public bool isInTile(Vector3 position){
+        if(collider.bounds.Contains (position)){
+            return true;
+        }
+        return false;
+    }
+
     void doIdleState(){
         sprite.color = defaultColor;
     }
@@ -62,6 +79,14 @@ public class Tile : MonoBehaviour{
     void doMouseOverState(){
         sprite.color = selectedColor;
     }
+
+    void doTileMoveable(){
+        sprite.color = moveableColor;
+    }
+
+    public bool isMoveable(){return tileState == TileState.MOVEABLE;}
+
+    public void setMove(){tileState = TileState.MOVEABLE;}
 
     public bool isMouseOver(){return tileState == TileState.MOUSEOVER;}
 }

@@ -9,6 +9,7 @@ public class HeroManager : MonoBehaviour {
     public List<Hero> heroList = new List<Hero>();
     public Hero selectedHero = null;
     public List<Tile> availableMoves = new List<Tile>();
+    public List<Vector3> moveSearchList = new List<Vector3>();    
 
     void Awake(){
         if(heroDaddy == null){
@@ -19,6 +20,48 @@ public class HeroManager : MonoBehaviour {
         }
 
         DontDestroyOnLoad(gameObject);
+    }
+
+    void getAvailableMoves(){
+        Vector3 originalPosition = heroDaddy.selectedHero.transform.position;
+        heroDaddy.checkAdjacentPositions(originalPosition);
+        foreach(Vector3 p in heroDaddy.moveSearchList){
+            heroDaddy.checkAdjacentPositions(p, false);
+        }        
+        foreach(Tile t in heroDaddy.availableMoves){
+            t.setMove();
+        }
+    }
+
+    void checkAdjacentPositions(Vector3 positionToCheck, bool checkMoveable = true){
+        Vector3 up = new Vector3(positionToCheck.x, positionToCheck.y -1, positionToCheck.z);
+        Vector3 down = new Vector3(positionToCheck.x, positionToCheck.y + 1, positionToCheck.z);
+        Vector3 left = new Vector3(positionToCheck.x -1, positionToCheck.y, positionToCheck.z);
+        Vector3 right = new Vector3(positionToCheck.x + 1, positionToCheck.y, positionToCheck.z);
+
+        checkAddTile(up, checkMoveable);
+        checkAddTile(down, checkMoveable);
+        checkAddTile(left, checkMoveable);
+        checkAddTile(right, checkMoveable);
+    }
+
+    void checkAddTile(Vector3 checkTilePosition, bool checkMoveable){
+        Tile checkTile = TileManager.getTileAt(checkTilePosition);
+        if(checkTile != null){
+            if(checkTile.containedActor == null){
+                if(!heroDaddy.availableMoves.Contains(checkTile)){
+                    heroDaddy.availableMoves.Add(checkTile);
+                }
+                if(!heroDaddy.moveSearchList.Contains(checkTile.transform.position) && checkMoveable){
+                    heroDaddy.moveSearchList.Add(checkTile.transform.position);   
+                }                
+            }
+            else if(checkTile.containedActor is Hero && checkMoveable){
+                if(!heroDaddy.moveSearchList.Contains(checkTile.transform.position)){
+                    heroDaddy.moveSearchList.Add(checkTile.transform.position);
+                }                
+            }
+        }
     }
 
     static public void addHero(Hero newHero){
@@ -37,6 +80,7 @@ public class HeroManager : MonoBehaviour {
 
     static public void setCurrentHero(Hero newHero){
         heroDaddy.selectedHero = newHero;
+        heroDaddy.getAvailableMoves();
     }
     
 }

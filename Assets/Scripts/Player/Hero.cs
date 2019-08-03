@@ -9,7 +9,7 @@ public class Hero : Actor {
             CheckMouseOver();
             CheckMouseClick();
         }
-    }
+    }    
 
     void CheckMouseOver(){
         if(collider.bounds.Contains (MouseUtilities.getMouseWorldPosition())){
