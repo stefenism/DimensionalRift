@@ -92,6 +92,7 @@ public class threeByGrid : MonoBehaviour {
         foreach(Tile t in allTiles){
             gridTiles.Add(t);
             t.checkActors();
+            TileManager.addTile(t);
         }
     }
 
