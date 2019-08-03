@@ -20,8 +20,11 @@ public class threeByGrid : MonoBehaviour {
 
     Color draggedColor = new Color(1, 0.45f, 0, 1);
 
+    public List<Tile> gridTiles = new List<Tile>();
+
     void Start(){
-        addToGridList(); 
+        addToGridList();
+        getTiles();
         sprite = GetComponent<SpriteRenderer>();
         collider = GetComponent<Collider2D>();
     }
@@ -80,6 +83,16 @@ public class threeByGrid : MonoBehaviour {
                     GridManager.setCurrentThreeBy(null);
                 }
             }
+    }
+
+    void getTiles(){
+        Tile[] allTiles;
+
+        allTiles = transform.GetChild(0).GetComponentsInChildren<Tile>();
+        foreach(Tile t in allTiles){
+            gridTiles.Add(t);
+            t.checkActors();
+        }
     }
 
     void doIdleState(){

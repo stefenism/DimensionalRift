@@ -16,6 +16,8 @@ public class Tile : MonoBehaviour{
     Color defaultColor = new Color(1, 1, 1, 1);
     Color selectedColor = new Color(0.48f, 1, 0, 1);
 
+    Actor containedActor;
+
     void Start(){
         sprite = GetComponent<SpriteRenderer>();
         collider = GetComponent<Collider2D>();
@@ -35,6 +37,21 @@ public class Tile : MonoBehaviour{
         else{
             tileState = TileState.IDLE;
             doIdleState();
+        }
+    }
+
+    public void checkActors(){
+        if(transform.childCount <= 0){
+            return;
+        }
+        containedActor = transform.GetChild(0).GetComponent<Actor>();
+        if(containedActor != null){
+            if(containedActor is Hero){
+                HeroManager.addHero((Hero)containedActor);
+            }
+            else{
+                Debug.Log("not a hero");
+            }
         }
     }
 
