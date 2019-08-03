@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    enum GameState{
+        PLAYER_TURN,
+        PLACEMENT_PHASE,
+        ENEMY_TURN,
+    }
+
+    GameState gameState = GameState.PLAYER_TURN;
 
     public static GameManager gameDaddy = null; //Static instance of GameManager allows it to be called from anywhere    
     void Awake(){
@@ -20,4 +27,15 @@ public class GameManager : MonoBehaviour
         //Keep our GameDaddy 4 E-V-E-R
         DontDestroyOnLoad(gameObject);
     }
+
+    void Update(){
+        if(Input.GetKeyDown(KeyCode.E)){
+            start_placement_phase();
+        }
+    }
+
+    public bool isPlayerTurn(){return gameState == GameState.PLAYER_TURN;}
+    public bool isPlacementPhase(){return gameState == GameState.PLACEMENT_PHASE;}
+
+    void start_placement_phase(){gameState = GameState.PLACEMENT_PHASE;}
 }

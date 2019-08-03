@@ -13,8 +13,8 @@ public class Tile : MonoBehaviour{
     Collider2D collider;
     TileState tileState = TileState.IDLE;
 
-    Color defaultColor = new Color(0.43f,0.43f,0.43f);
-    Color selectedColor = new Color(0.43f,0.43f,0);
+    Color defaultColor = new Color(1f,1f,1f);
+    Color selectedColor = new Color(0.95f,0.875f,0, 0.42f);
 
     void Start(){
         sprite = GetComponent<SpriteRenderer>();
@@ -22,7 +22,9 @@ public class Tile : MonoBehaviour{
     }
 
     void Update () {
-        CheckMouseOver();
+        if(GameManager.gameDaddy.isPlayerTurn()){
+            CheckMouseOver();
+        }        
     }
 
     void CheckMouseOver(){
