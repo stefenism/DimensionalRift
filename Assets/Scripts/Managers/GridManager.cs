@@ -32,6 +32,7 @@ public class GridManager : MonoBehaviour {
     void cloneCurrentThreeBy(threeByGrid selectedGrid){
         Debug.Log("gonna clone a threeby: " + selectedGrid);
         copiedThreeBy = Object.Instantiate(selectedGrid) as threeByGrid;
+        copiedThreeBy.transform.SetParent(selectedGrid.transform.parent);
         copiedThreeBy.setGridDragged();
     }
 
@@ -47,12 +48,16 @@ public class GridManager : MonoBehaviour {
     }
 
     void reset_copy(){
-        Debug.Log("resetting copy");        
-        gridDaddy.selectedThreeBy.setGridIdle();
+        Debug.Log("resetting copy");             
+        gridDaddy.selectedThreeBy.setGridIdle();            
         // gridDaddy.removeCopiedThreeBy();
-        gridDaddy.placementPositions.Clear();
-        gridDaddy.copiedThreeBy = null;
+        gridDaddy.placementPositions.Clear();        
         gridDaddy.selectedThreeBy = null;
+        GameManager.start_player_phase();
+        if(gridDaddy.copiedThreeBy != null){
+            gridDaddy.copiedThreeBy.setGridIdle();
+            gridDaddy.copiedThreeBy = null;
+        }    
     }
 
     void cancel_copy(){
@@ -118,7 +123,8 @@ public class GridManager : MonoBehaviour {
             gridDaddy.reset_copy();            
         }        
     }
-    static public void addThreeBy(threeByGrid newGrid){        
+    static public void addThreeBy(threeByGrid newGrid){
+        Debug.Log("gonna add a three by");
         if(!gridDaddy.threeByList.Contains(newGrid)){            
             gridDaddy.threeByList.Add(newGrid);
         }        

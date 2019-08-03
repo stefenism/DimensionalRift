@@ -37,5 +37,6 @@ public class GameManager : MonoBehaviour
     public bool isPlayerTurn(){return gameState == GameState.PLAYER_TURN;}
     public bool isPlacementPhase(){return gameState == GameState.PLACEMENT_PHASE;}
 
-    void start_placement_phase(){gameState = GameState.PLACEMENT_PHASE;}
+    static public void start_player_phase(){gameDaddy.gameState = GameState.PLAYER_TURN;}
+    static public void start_placement_phase(){gameDaddy.gameState = GameState.PLACEMENT_PHASE;}
 }

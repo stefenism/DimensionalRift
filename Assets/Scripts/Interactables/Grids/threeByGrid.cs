@@ -15,16 +15,16 @@ public class threeByGrid : MonoBehaviour {
     Collider2D collider;
     GridState gridState = GridState.IDLE;
 
-    Color defaultColor = new Color(0.95f, 0.875f, 0, 0);
-    Color selectedColor = new Color(0.95f, 0.875f, 0, 0.42f);
+    Color defaultColor = new Color(1, 1, 1, 0);
+    Color selectedColor = new Color(0.48f, 1, 0, 1);
 
-    Color draggedColor = new Color(0, 0.08f, 1, 0.42f);
+    Color draggedColor = new Color(1, 0.45f, 0, 1);
 
-    void Awake() {
-        addToGridList();    
-    }
+    public List<Tile> gridTiles = new List<Tile>();
 
     void Start(){
+        addToGridList();
+        getTiles();
         sprite = GetComponent<SpriteRenderer>();
         collider = GetComponent<Collider2D>();
     }
@@ -45,6 +45,9 @@ public class threeByGrid : MonoBehaviour {
                 CheckMouseOver();                
             }
         }
+        else{
+            setGridIdle();
+        }
     }
 
     void CheckMouseOver(){
@@ -61,14 +64,13 @@ public class threeByGrid : MonoBehaviour {
     void CheckMouseClick(){
         if(this.gridState == GridState.MOUSEOVER){
             if(Input.GetMouseButtonDown(0)){                
-                if(GridManager.getCurrentThreeBy() == null){
+                if(GridManager.getCurrentThreeBy() == null && GameManager.gameDaddy.isPlacementPhase()){
                     GridManager.setCurrentThreeBy(this);
                 }
             }            
         }
         else if(isDragged()){
-            if(Input.GetMouseButtonDown(0)){
-                setGridIdle();
+            if(Input.GetMouseButtonDown(0)){                
                 GridManager.setCurrentThreeBy(null);
             }
         }
@@ -76,11 +78,21 @@ public class threeByGrid : MonoBehaviour {
 
     void checkMouseDrop(){
         if(Input.GetMouseButtonDown(1)){
-                if(GridManager.getCurrentThreeBy() == this){
+                if(GridManager.getCurrentThreeBy() == this){                                        
                     GridManager.removeCopiedThreeBy();
-                    GridManager.setCurrentThreeBy(null);                    
+                    GridManager.setCurrentThreeBy(null);
                 }
             }
+    }
+
+    void getTiles(){
+        Tile[] allTiles;
+
+        allTiles = transform.GetChild(0).GetComponentsInChildren<Tile>();
+        foreach(Tile t in allTiles){
+            gridTiles.Add(t);
+            t.checkActors();
+        }
     }
 
     void doIdleState(){
@@ -111,7 +123,10 @@ public class threeByGrid : MonoBehaviour {
     public bool isSelected(){return gridState == GridState.SELECTED;}
     public bool isDragged(){return gridState == GridState.DRAGGED;}
 
-    public void setGridIdle(){gridState = GridState.IDLE;}
+    public void setGridIdle(){
+        gridState = GridState.IDLE;
+        doIdleState();
+    }
     public void setGridMouseOver(){gridState = GridState.MOUSEOVER;}
     public void setGridSelected(){gridState = GridState.SELECTED;}
     public void setGridDragged(){gridState = GridState.DRAGGED;}
