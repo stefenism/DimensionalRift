@@ -13,6 +13,24 @@ public class ChangeTurnView : MonoBehaviour
 
     }
 
+    public void setPlayerTurn(){
+        animator.SetBool("YourTurn", true);
+        animator.SetBool("EnemyTurn", false);
+        animator.SetBool("PlacementTurn", false);
+    }
+
+    public void setEnemyTurn(){
+        animator.SetBool("YourTurn", false);
+        animator.SetBool("EnemyTurn", true);
+        animator.SetBool("PlacementTurn", false);
+    }
+
+    public void setPlacementTurn(){
+        animator.SetBool("YourTurn", false);
+        animator.SetBool("EnemyTurn", false);
+        animator.SetBool("PlacementTurn", true);
+    }
+
     // Update is called once per frame
     void Update()
     {
