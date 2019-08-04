@@ -95,7 +95,13 @@ public class HeroManager : MonoBehaviour {
         }
     }
 
+    void removeFromCurrentTile(Hero hero){
+        Tile currentTile = TileManager.getTileAt(hero.transform.position);
+        currentTile.containedActor = null;
+    }
+
     public void doMovement(Tile tile){
+        removeFromCurrentTile(heroDaddy.selectedHero);
         MovementInstructions movement = heroDaddy.getMovement(tile);
         if(movement != null){
             doMovements = StartCoroutine(doInstruction(movement));
@@ -147,7 +153,7 @@ public class HeroManager : MonoBehaviour {
     }
 
     IEnumerator doInstruction(MovementInstructions currentMovement){
-        Vector3 originalHeroPosition = heroDaddy.selectedHero.transform.position;
+        Vector3 originalHeroPosition = heroDaddy.selectedHero.transform.position;        
         int cycle = 0;
         heroDaddy.selectedHero.setMoving();
         while(heroDaddy.selectedHero.transform.position != currentMovement.getTileList()[0].transform.position){
@@ -166,6 +172,7 @@ public class HeroManager : MonoBehaviour {
             heroDaddy.selectedHero.setFinished();
             Tile newTile = TileManager.getTileAt(heroDaddy.selectedHero.transform.position);
             heroDaddy.selectedHero.transform.SetParent(newTile.gameObject.transform);
+            newTile.containedActor = heroDaddy.selectedHero;
             HeroManager.clearMove();
         }
     }

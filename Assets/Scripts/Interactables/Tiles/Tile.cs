@@ -88,7 +88,7 @@ public class Tile : MonoBehaviour{
                 HeroManager.addHero((Hero)containedActor);
             }
             else{
-                Debug.Log("not a hero");
+                EnemyManager.addSlime((Slime)containedActor);
             }
         }
     }
