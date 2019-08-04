@@ -6,6 +6,7 @@ public class Slime : Actor {
         if(GameManager.gameDaddy.isEnemyTurn()){
             checkAnim();
         }
+        checkAnim();
     }
 
     void checkAnim(){
@@ -13,17 +14,26 @@ public class Slime : Actor {
             case ActorState.READY:
                 anim.SetBool("Ready", true);
                 anim.SetBool("March", false);
-                anim.SetBool("Finished", false);
+                anim.SetBool("AttackReady", false);
+                anim.SetBool("Attacking", false);
                 break;
             case ActorState.MOVING:
                 anim.SetBool("Ready", false);
                 anim.SetBool("March", true);
-                anim.SetBool("Finished", false);
+                anim.SetBool("AttackReady", false);
+                anim.SetBool("Attacking", false);
                 break;
-            case ActorState.FINISHED:
+            case ActorState.ATTACKREADY:
                 anim.SetBool("Ready", false);
                 anim.SetBool("March", false);
-                anim.SetBool("Finished", true);
+                anim.SetBool("AttackReady", true);
+                anim.SetBool("Attacking", false);
+                break;
+            case ActorState.ATTACKING:                
+                anim.SetBool("Ready", false);
+                anim.SetBool("March", false);
+                anim.SetBool("AttackReady", false);
+                anim.SetBool("Attacking", true);
                 break;
         }
     }

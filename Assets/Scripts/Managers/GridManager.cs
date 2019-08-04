@@ -29,8 +29,7 @@ public class GridManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    void cloneCurrentThreeBy(threeByGrid selectedGrid){
-        Debug.Log("gonna clone a threeby: " + selectedGrid);
+    void cloneCurrentThreeBy(threeByGrid selectedGrid){        
         copiedThreeBy = Object.Instantiate(selectedGrid) as threeByGrid;
         copiedThreeBy.transform.SetParent(selectedGrid.transform.parent);
         copiedThreeBy.setGridDragged();
@@ -47,8 +46,7 @@ public class GridManager : MonoBehaviour {
         }        
     }
 
-    void reset_copy(){
-        Debug.Log("resetting copy");             
+    void reset_copy(){        
         gridDaddy.selectedThreeBy.setGridIdle();            
         // gridDaddy.removeCopiedThreeBy();
         gridDaddy.placementPositions.Clear();        
@@ -62,6 +60,17 @@ public class GridManager : MonoBehaviour {
 
     void cancel_copy(){
         removeCopiedThreeBy();        
+    }
+
+    static public void checkDeleteGrid(threeByGrid placedGrid){
+        foreach (threeByGrid g in gridDaddy.threeByList){
+            if(g.transform.position == placedGrid.transform.position){
+                if(g != placedGrid){
+                    Destroy(g.gameObject);
+                    return;
+                }
+            }
+        }        
     }
 
     static public Vector3 getClosestPosition(){
@@ -110,8 +119,7 @@ public class GridManager : MonoBehaviour {
     void start_place_grid(){placementState = PlacementState.PLACE_GRID;}
 
     static public threeByGrid getCurrentThreeBy(){return gridDaddy.selectedThreeBy;}
-    static public void setCurrentThreeBy(threeByGrid selectedGrid){
-        Debug.Log("got into setcurrent three by with: " + selectedGrid);
+    static public void setCurrentThreeBy(threeByGrid selectedGrid){        
         if(selectedGrid != null){
             gridDaddy.selectedThreeBy = selectedGrid;
             gridDaddy.cloneCurrentThreeBy(selectedGrid);
@@ -119,12 +127,11 @@ public class GridManager : MonoBehaviour {
             selectedGrid.setGridSelected();
         }                
         if(selectedGrid == null){
-            Debug.Log("send in null => reset copy");
+            //send in null => reset copy
             gridDaddy.reset_copy();            
         }        
     }
-    static public void addThreeBy(threeByGrid newGrid){
-        Debug.Log("gonna add a three by");
+    static public void addThreeBy(threeByGrid newGrid){        
         if(!gridDaddy.threeByList.Contains(newGrid)){            
             gridDaddy.threeByList.Add(newGrid);
         }        
