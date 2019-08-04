@@ -9,6 +9,13 @@ public class Slime : Actor {
         checkAnim();
     }
 
+    public override void kill(){
+        Debug.Log("killing the slime");
+        EnemyManager.enemyDaddy.slimeList.Remove(this);
+        TileManager.getTileAt(transform.position).containedActor = null;
+        Destroy(this.gameObject);
+    }
+
     void checkAnim(){
         switch(actorState){
             case ActorState.READY:

@@ -6,8 +6,8 @@ public class Hero : Actor {
     public int movementDistance = 2;
 
     void Update(){
-        if(GameManager.gameDaddy.isPlayerTurn()){
-            checkAnim();
+        checkAnim();
+        if(GameManager.gameDaddy.isPlayerTurn()){            
             if(isFinished()){
                 return;
             }
@@ -52,6 +52,7 @@ public class Hero : Actor {
                 anim.SetBool("Finished", false);
                 anim.SetBool("Selected", false);
                 anim.SetBool("Dying", false);
+                anim.SetBool("Attacking", false);
                 break;
             case ActorState.MOVING:
                 anim.SetBool("Ready", false);
@@ -59,6 +60,7 @@ public class Hero : Actor {
                 anim.SetBool("Finished", false);
                 anim.SetBool("Selected", false);
                 anim.SetBool("Dying", false);
+                anim.SetBool("Attacking", false);
                 break;
             case ActorState.FINISHED:
                 anim.SetBool("Ready", false);
@@ -66,6 +68,7 @@ public class Hero : Actor {
                 anim.SetBool("Finished", true);
                 anim.SetBool("Selected", false);
                 anim.SetBool("Dying", false);
+                anim.SetBool("Attacking", false);
                 break;
             case ActorState.MOUSEOVER:
                 anim.SetBool("Ready", false);
@@ -73,6 +76,7 @@ public class Hero : Actor {
                 anim.SetBool("Finished", false);
                 anim.SetBool("Selected", true);
                 anim.SetBool("Dying", false);
+                anim.SetBool("Attacking", false);
                 break;
             case ActorState.SELECTED:
                 anim.SetBool("Ready", false);
@@ -80,6 +84,15 @@ public class Hero : Actor {
                 anim.SetBool("Finished", false);
                 anim.SetBool("Selected", true);
                 anim.SetBool("Dying", false);
+                anim.SetBool("Attacking", false);
+                break;
+            case ActorState.ATTACKING:
+                anim.SetBool("Ready", false);
+                anim.SetBool("March", false);
+                anim.SetBool("Finished", false);
+                anim.SetBool("Selected", false);
+                anim.SetBool("Dying", false);
+                anim.SetBool("Attacking", true);
                 break;
             case ActorState.DYING:
                 anim.SetBool("Ready", false);
@@ -87,6 +100,7 @@ public class Hero : Actor {
                 anim.SetBool("Finished", false);
                 anim.SetBool("Selected", false);
                 anim.SetBool("Dying", true);
+                anim.SetBool("Attacking", false);
                 break;
             default:
                 break;
@@ -99,6 +113,14 @@ public class Hero : Actor {
         TileManager.getTileAt(transform.position).containedActor = null;
         this.setDying();
         StartCoroutine(destroyWait(1));        
+    }
+
+    public void suicide(){
+        Debug.Log("hero is committing suicide");
+        HeroManager.heroDaddy.heroList.Remove(this);
+        TileManager.getTileAt(transform.position).containedActor = null;
+        this.setAttacking();
+        StartCoroutine(destroyWait(1));
     }
 
     IEnumerator destroyWait(int seconds){

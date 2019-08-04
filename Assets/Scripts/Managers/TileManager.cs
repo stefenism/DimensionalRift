@@ -31,6 +31,12 @@ public class TileManager : MonoBehaviour {
         }
     }
 
+    static public void removeTile(Tile removeTile){
+        if(tileDaddy.tileList.Contains(removeTile)){
+            tileDaddy.tileList.Remove(removeTile);
+        }
+    }
+
     static public Tile getTileAt(Vector3 position){
         foreach (Tile t in tileDaddy.tileList){        
             if(t.isInTile(position)){

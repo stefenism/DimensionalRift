@@ -12,6 +12,8 @@ public class HeroManager : MonoBehaviour {
     public List<MovementInstructions> movements = new List<MovementInstructions>();
     public List<Vector3> moveSearchList = new List<Vector3>();  
 
+    public endTurnButton turnButton;
+
     Coroutine doMovements = null;  
 
     void Awake(){
@@ -51,6 +53,11 @@ public class HeroManager : MonoBehaviour {
     }
 
     void checkAdjacentPositions(Vector3 positionToCheck, bool checkMoveable = true){
+        if(movements.Count > 0){
+            if(getMovement(TileManager.getTileAt(positionToCheck)).isAttack()){
+                return;
+            }
+        }        
         Vector3 up = new Vector3(positionToCheck.x, positionToCheck.y -1, positionToCheck.z);
         Vector3 down = new Vector3(positionToCheck.x, positionToCheck.y + 1, positionToCheck.z);
         Vector3 left = new Vector3(positionToCheck.x -1, positionToCheck.y, positionToCheck.z);
@@ -92,6 +99,16 @@ public class HeroManager : MonoBehaviour {
                     heroDaddy.moveSearchList.Add(checkTile.transform.position);
                 }                
             }
+            else if(checkTile.containedActor is Slime){
+                if(!heroDaddy.availableMoves.Contains(checkTile)){
+                    heroDaddy.availableMoves.Add(checkTile);
+                    MovementInstructions newMovement = new MovementInstructions();
+                    newMovement.name = newMovement.name + " " + heroDaddy.movements.Count;
+                    newMovement.addTile(checkTile);
+                    newMovement.setAsAttack();
+                    movements.Add(newMovement);
+                }
+            }
         }
     }
 
@@ -104,7 +121,12 @@ public class HeroManager : MonoBehaviour {
         removeFromCurrentTile(heroDaddy.selectedHero);
         MovementInstructions movement = heroDaddy.getMovement(tile);
         if(movement != null){
-            doMovements = StartCoroutine(doInstruction(movement));
+            if(movement.isAttack()){
+                doMovements = StartCoroutine(doAttackInstruction(movement));
+            }
+            else{
+                doMovements = StartCoroutine(doInstruction(movement));
+            }            
         }
     }
 
@@ -116,6 +138,13 @@ public class HeroManager : MonoBehaviour {
             }
         }
         return null;
+    }
+
+    static public void startPlayerTurn(){
+        foreach (Hero h in heroDaddy.heroList){
+            h.setReady();
+        }
+        heroDaddy.turnButton.startTurn();
     }
 
     static public void clearMove(){
@@ -170,9 +199,36 @@ public class HeroManager : MonoBehaviour {
             doMovements = null;
             Debug.Log("weve arrived");
             heroDaddy.selectedHero.setFinished();
-            Tile newTile = TileManager.getTileAt(heroDaddy.selectedHero.transform.position);
-            heroDaddy.selectedHero.transform.SetParent(newTile.gameObject.transform);
+            Tile newTile = TileManager.getTileAt(heroDaddy.selectedHero.transform.position);            
+            heroDaddy.selectedHero.transform.SetParent(newTile.gameObject.transform);            
             newTile.containedActor = heroDaddy.selectedHero;
+            HeroManager.clearMove();
+        }
+    }
+
+    IEnumerator doAttackInstruction(MovementInstructions currentMovement){
+        Vector3 originalHeroPosition = heroDaddy.selectedHero.transform.position;        
+        int cycle = 0;
+        heroDaddy.selectedHero.setMoving();
+        while(heroDaddy.selectedHero.transform.position != currentMovement.getTileList()[0].transform.position){
+            resolve_instruction(currentMovement, originalHeroPosition, cycle);
+            cycle += 1;
+            yield return 0;
+        }        
+        currentMovement.getTileList().RemoveAt(0);
+        StopCoroutine(doMovements);
+        if(currentMovement.getTileList().Count > 0){
+            doMovements = StartCoroutine(doAttackInstruction(currentMovement));
+        }
+        else{
+            doMovements = null;
+            Debug.Log("weve arrived");
+            heroDaddy.selectedHero.setAttacking();
+            Tile newTile = TileManager.getTileAt(heroDaddy.selectedHero.transform.position);            
+            heroDaddy.selectedHero.transform.SetParent(newTile.gameObject.transform);            
+            // newTile.containedActor = heroDaddy.selectedHero;            
+            newTile.containedActor.kill();
+            heroDaddy.selectedHero.suicide();
             HeroManager.clearMove();
         }
     }

@@ -8,10 +8,16 @@ public class endTurnButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public Sprite defaultSprite;
     public Sprite hoverSprite;
     public Sprite clickDownSprite;
-    public Sprite clickUpSprite;
+    public Sprite finishedSprite;
 
     void Start(){
         button = GetComponent<Button>();
+    }
+
+    void Update(){
+        if(!GameManager.gameDaddy.isPlayerTurn()){
+            button.image.sprite = finishedSprite;
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData){
@@ -26,8 +32,16 @@ public class endTurnButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     }
 
     public void OnPointerUp(PointerEventData eventData){
-        button.image.sprite = clickUpSprite;
+        button.image.sprite = defaultSprite;
     }
 
+    public void endTurn(){
+        Debug.Log("ending turn");
+        GameManager.start_enemy_phase();
+    }
+
+    public void startTurn(){
+        button.image.sprite = defaultSprite;
+    }
 
 }

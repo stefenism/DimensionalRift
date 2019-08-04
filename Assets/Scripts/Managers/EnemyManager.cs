@@ -162,6 +162,12 @@ public class EnemyManager : MonoBehaviour {
         }
     }
 
+    static public void removeSlime(Slime removeSlime){
+        if(enemyDaddy.slimeList.Contains(removeSlime)){
+            enemyDaddy.slimeList.Remove(removeSlime);
+        }
+    }
+
     IEnumerator moveSlime(Slime slime, Tile tile){
         Vector3 originalPosition = slime.transform.position;
         TileManager.getTileAt(originalPosition).containedActor = null;
@@ -218,5 +224,6 @@ public class EnemyManager : MonoBehaviour {
         }
 
         resolveEnemyTurn = null;
+        GameManager.start_placement_phase();
     }
 }
