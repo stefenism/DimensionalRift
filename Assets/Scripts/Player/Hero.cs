@@ -98,8 +98,7 @@ public class Hero : Actor {
         HeroManager.heroDaddy.heroList.Remove(this);
         TileManager.getTileAt(transform.position).containedActor = null;
         this.setDying();
-        StartCoroutine(destroyWait(1));
-        // Destroy(this.gameObject);
+        StartCoroutine(destroyWait(1));        
     }
 
     IEnumerator destroyWait(int seconds){
