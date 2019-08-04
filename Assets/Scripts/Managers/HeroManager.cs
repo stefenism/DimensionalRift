@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class HeroManager : MonoBehaviour {
@@ -29,6 +30,14 @@ public class HeroManager : MonoBehaviour {
 
     void Update(){
         checkAllMoves();
+        checkHeroes();
+    }
+
+    void checkHeroes(){
+        if(heroDaddy.heroList.Count <= 0){
+            Debug.Log("lose game");
+            SceneManager.LoadScene( SceneManager.GetActiveScene().buildIndex);
+        }
     }
 
     void checkAllMoves(){

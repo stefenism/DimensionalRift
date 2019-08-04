@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
 
     public static GameManager gameDaddy = null; //Static instance of GameManager allows it to be called from anywhere    
     public ChangeTurnView turnView;
+
+    public GameObject startGamePrompt;
+    public GameObject endGamePrompt;
     void Awake(){
         //Check to see if there's a gameDaddy
         if(gameDaddy == null){
