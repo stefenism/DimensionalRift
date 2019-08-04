@@ -30,15 +30,4 @@ public class ChangeTurnView : MonoBehaviour
         animator.SetBool("EnemyTurn", false);
         animator.SetBool("PlacementTurn", true);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        x++;
-
-        if(x>100){
-            animator.SetBool("YourTurn",false);
-            animator.SetBool("EnemyTurn",true);
-        }
-    }
 }
