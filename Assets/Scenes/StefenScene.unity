@@ -826,6 +826,7 @@ MonoBehaviour:
   availableMoves: []
   movements: []
   moveSearchList: []
+  turnButton: {fileID: 700277353}
 --- !u!1 &1937874353
 GameObject:
   m_ObjectHideFlags: 0

@@ -40,5 +40,8 @@ public class endTurnButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         GameManager.start_enemy_phase();
     }
 
+    public void startTurn(){
+        button.image.sprite = defaultSprite;
+    }
 
 }
