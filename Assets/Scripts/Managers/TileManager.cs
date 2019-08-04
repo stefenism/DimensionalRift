@@ -19,6 +19,12 @@ public class TileManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
+    static public void resetTiles(){
+        foreach(Tile t in tileDaddy.tileList){
+            t.setIdle();            
+        }
+    }
+
     static public void addTile(Tile newTile){
         if(!tileDaddy.tileList.Contains(newTile)){
             tileDaddy.tileList.Add(newTile);

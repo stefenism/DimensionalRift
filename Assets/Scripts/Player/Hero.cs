@@ -7,16 +7,18 @@ public class Hero : Actor {
     void Update(){
         if(GameManager.gameDaddy.isPlayerTurn()){
             CheckMouseOver();
-            CheckMouseClick();
+            CheckMouseClick();            
         }
     }    
 
     void CheckMouseOver(){
-        if(collider.bounds.Contains (MouseUtilities.getMouseWorldPosition())){
-            doMouseOverState();
+        if(collider.bounds.Contains (MouseUtilities.getMouseWorldPosition())){            
+            doMouseOverState();            
         }
         else{
-            setReady();
+            if(actorState != ActorState.SELECTED){
+                setReady();
+            }            
         }
     }
 
@@ -26,7 +28,15 @@ public class Hero : Actor {
                 Debug.Log("You Clicked a hero!: " + gameObject.name);
                 HeroManager.setCurrentHero(this);                
             }
-        }
+        }        
+        if(Input.GetMouseButtonDown(1)){
+            Debug.Log("cancel hero move");
+            if(HeroManager.heroDaddy.selectedHero != null){
+                Debug.Log("cancel hero move initiated");
+                HeroManager.heroDaddy.selectedHero = null;
+                HeroManager.clearMove();
+            }
+        }        
     }
 
     void doMouseOverState(){        

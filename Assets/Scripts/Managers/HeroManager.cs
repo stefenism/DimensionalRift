@@ -47,10 +47,11 @@ public class HeroManager : MonoBehaviour {
 
     void checkAddTile(Vector3 checkTilePosition, bool checkMoveable){
         Tile checkTile = TileManager.getTileAt(checkTilePosition);
+        Debug.Log("checking movement tile: " + checkTile);
         if(checkTile != null){
             if(checkTile.containedActor == null){
                 if(!heroDaddy.availableMoves.Contains(checkTile)){
-                    heroDaddy.availableMoves.Add(checkTile);
+                    heroDaddy.availableMoves.Add(checkTile);                    
                 }
                 if(!heroDaddy.moveSearchList.Contains(checkTile.transform.position) && checkMoveable){
                     heroDaddy.moveSearchList.Add(checkTile.transform.position);   
@@ -62,6 +63,13 @@ public class HeroManager : MonoBehaviour {
                 }                
             }
         }
+    }
+
+    static public void clearMove(){
+        TileManager.resetTiles();
+        heroDaddy.availableMoves.Clear();
+        heroDaddy.moveSearchList.Clear();
+        heroDaddy.selectedHero = null;
     }
 
     static public void addHero(Hero newHero){
@@ -79,6 +87,7 @@ public class HeroManager : MonoBehaviour {
     static public Hero getCurrentHero(){return heroDaddy.selectedHero;}
 
     static public void setCurrentHero(Hero newHero){
+        clearMove();
         heroDaddy.selectedHero = newHero;
         heroDaddy.getAvailableMoves();
     }

@@ -8,6 +8,7 @@ public class Tile : MonoBehaviour{
         IDLE,
         MOUSEOVER,
         MOVEABLE,
+        SELECTMOVE,
     }
 
     SpriteRenderer sprite;
@@ -16,7 +17,8 @@ public class Tile : MonoBehaviour{
 
     Color defaultColor = new Color(1, 1, 1, 1);
     Color selectedColor = new Color(0.48f, 1, 0, 1);
-    Color moveableColor = new Color(1, 0.45f, 0, 1);
+    Color moveableColor = new Color(0, 0.75f, 0.61f, 0.42f);    
+    Color moveableSelctedColor = new Color(1, 0.45f, 0, 1);    
 
     public Actor containedActor;
 
@@ -26,11 +28,8 @@ public class Tile : MonoBehaviour{
     }
 
     void Update () {
-        if(GameManager.gameDaddy.isPlayerTurn()){
-            if(HeroManager.heroDaddy.selectedHero == null){
-                CheckMouseOver();
-                //THIS WILL HAVE TO CHANGE
-            }            
+        if(GameManager.gameDaddy.isPlayerTurn()){            
+            CheckMouseOver();                                        
             if(isMoveable()){
                 doTileMoveable();
             }
@@ -39,14 +38,30 @@ public class Tile : MonoBehaviour{
 
     void CheckMouseOver(){
         if(collider.bounds.Contains (MouseUtilities.getMouseWorldPosition())){
-            tileState = TileState.MOUSEOVER;
-            doMouseOverState();
+            if(HeroManager.heroDaddy.selectedHero == null){
+                tileState = TileState.MOUSEOVER;
+                doMouseOverState();
+            }
+            else{
+                if(tileState == TileState.MOVEABLE){
+                    tileState = TileState.SELECTMOVE;
+                    doSelectMoveState();
+                }                
+            }
         }
         else{
-            if(tileState != TileState.MOVEABLE){
-                tileState = TileState.IDLE;
-                doIdleState();
-            }            
+            if(HeroManager.heroDaddy.selectedHero == null){
+                if(tileState != TileState.MOVEABLE){
+                    tileState = TileState.IDLE;
+                    doIdleState();
+                }
+            }
+            else{
+                if(tileState == TileState.SELECTMOVE){
+                    tileState = TileState.MOVEABLE;
+                    doTileMoveable();
+                }
+            }
         }
     }
 
@@ -84,8 +99,16 @@ public class Tile : MonoBehaviour{
         sprite.color = moveableColor;
     }
 
+    void doSelectMoveState(){
+        sprite.color = moveableSelctedColor;
+    }
+
     public bool isMoveable(){return tileState == TileState.MOVEABLE;}
 
+    public void setIdle(){
+        tileState = TileState.IDLE;
+        doIdleState();
+    }
     public void setMove(){tileState = TileState.MOVEABLE;}
 
     public bool isMouseOver(){return tileState == TileState.MOUSEOVER;}
