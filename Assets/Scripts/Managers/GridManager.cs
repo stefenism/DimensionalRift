@@ -36,9 +36,10 @@ public class GridManager : MonoBehaviour {
     }
 
     void getAvailablePlacementPositions(){
-        foreach(threeByGrid g in gridDaddy.threeByList){
-            gridDaddy.addAdjacentGridPositions(g);
-        }
+        // foreach(threeByGrid g in gridDaddy.threeByList){
+        //     gridDaddy.addAdjacentGridPositions(g);
+        // }
+        gridDaddy.addAdjacentGridPositions(gridDaddy.selectedThreeBy);
         for(int i = gridDaddy.placementPositions.Count - 1; i >= 0; i--){
             if(gridDaddy.placementPositions[i] == gridDaddy.selectedThreeBy.transform.position){
                 gridDaddy.placementPositions.RemoveAt(i);
@@ -50,8 +51,7 @@ public class GridManager : MonoBehaviour {
         gridDaddy.selectedThreeBy.setGridIdle();            
         // gridDaddy.removeCopiedThreeBy();
         gridDaddy.placementPositions.Clear();        
-        gridDaddy.selectedThreeBy = null;
-        GameManager.start_player_phase();
+        gridDaddy.selectedThreeBy = null;        
         if(gridDaddy.copiedThreeBy != null){
             gridDaddy.copiedThreeBy.setGridIdle();
             gridDaddy.copiedThreeBy = null;
