@@ -11,6 +11,8 @@ public class EnemyManager : MonoBehaviour {
     public Tile juiceMove = null;
     
     Coroutine doMovement = null;
+    Coroutine resolveEnemyTurn = null;
+    Coroutine slimeTurn = null;
 
     void Awake(){
         if(enemyDaddy == null){
@@ -29,18 +31,19 @@ public class EnemyManager : MonoBehaviour {
     }
 
     static public void doEnemyTurn(){
-        foreach(Slime s in enemyDaddy.slimeList){            
-            if(s.isAttacking()){
-                enemyDaddy.attack(s);
-                continue;
-            }
-            else{
-                enemyDaddy.getAvailableMoves(s);
-            }
-            enemyDaddy.availableMoves.Clear();
-            enemyDaddy.juiceMove = null;
-            enemyDaddy.doMovement = null;
-        }
+        // foreach(Slime s in enemyDaddy.slimeList){            
+        //     if(s.isAttacking()){
+        //         enemyDaddy.attack(s);
+        //         continue;
+        //     }
+        //     else{
+        //         enemyDaddy.getAvailableMoves(s);
+        //     }
+        //     enemyDaddy.availableMoves.Clear();
+        //     enemyDaddy.juiceMove = null;
+        //     enemyDaddy.doMovement = null;
+        // }
+        enemyDaddy.resolveEnemyTurn = enemyDaddy.StartCoroutine(enemyDaddy.processTurn());
     }
 
     void getAvailableMoves(Slime slime){
@@ -68,6 +71,7 @@ public class EnemyManager : MonoBehaviour {
                 enemyDaddy.availableMoves.Add(checkTile);
             }
             else if(checkTile.containedActor is Hero){
+                Debug.Log("ooh...that's a juicy move");
                 enemyDaddy.availableMoves.Add(checkTile);
                 juiceMove = checkTile;
             }            
@@ -86,7 +90,7 @@ public class EnemyManager : MonoBehaviour {
         foreach(Tile t in availableMoves){
             Vector3 closestHero = getClosestHero(slime);
             Tile bestTile = getBestTile(slime, closestHero);
-            enemyDaddy.moveSlime(slime, bestTile);
+            doMovement = StartCoroutine(moveSlime(slime, bestTile));
         }
     }
 
@@ -150,24 +154,71 @@ public class EnemyManager : MonoBehaviour {
         }
 
         return closestPosition;
-    }
-
-    void moveSlime(Slime slime, Tile tile){
-        Vector3 originalPosition = slime.transform.position;
-        TileManager.getTileAt(originalPosition).containedActor = null;
-        int cycle = 0;
-        while(slime.transform.position != tile.transform.position){
-            slime.transform.position = Vector3.Lerp(originalPosition, tile.transform.position, 0.05f * cycle);
-            cycle++;
-        }
-        Tile newTile = TileManager.getTileAt(slime.transform.position);        
-        slime.transform.SetParent(newTile.transform);
-        newTile.containedActor = slime;
-    }
+    }    
 
     static public void addSlime(Slime newSlime){
         if(!enemyDaddy.slimeList.Contains(newSlime)){
             enemyDaddy.slimeList.Add(newSlime);
         }
+    }
+
+    IEnumerator moveSlime(Slime slime, Tile tile){
+         Vector3 originalPosition = slime.transform.position;
+        TileManager.getTileAt(originalPosition).containedActor = null;
+        int cycle = 0;
+        while(slime.transform.position != tile.transform.position){
+            slime.transform.position = Vector3.Lerp(originalPosition, tile.transform.position, 0.05f * cycle);
+            cycle++;
+            yield return 0;
+        }
+        Tile newTile = TileManager.getTileAt(slime.transform.position);        
+        slime.transform.SetParent(newTile.transform);
+        newTile.containedActor = slime;
+        doMovement = null;        
+    }
+
+    IEnumerator doSlimeTurn(Slime slime){
+        if(slime.isAttacking()){
+            enemyDaddy.attack(slime);            
+        }            
+        else{
+            // enemyDaddy.getAvailableMoves(slime);
+            Vector3 originalPosition = slime.transform.position;
+            enemyDaddy.checkAdjacentPositions(originalPosition);
+            // enemyDaddy.evaluateChoices(slime);
+            //go through moves
+            //if move has a hero => attack
+            //otherwise move towards the closest hero
+            if(juiceMove != null){
+                Debug.Log("the slime: " + slime.name + " got a juicy move!");
+                //attack
+                slime.setAttacking();
+                if(slimeTurn != null){
+                    StopCoroutine(slimeTurn);
+                    slimeTurn = null;
+                }                
+            }
+            else{
+                Vector3 closestHero = getClosestHero(slime);
+                Tile bestTile = getBestTile(slime, closestHero);
+                Debug.Log("for the slime: " + slime.name + " the tile list is: ");
+                foreach(Tile t in enemyDaddy.availableMoves){
+                Debug.Log("tile choice: " + t);
+                }
+                yield return doMovement = StartCoroutine(moveSlime(slime, bestTile));        
+            }            
+        }            
+        enemyDaddy.availableMoves.Clear();
+        enemyDaddy.juiceMove = null;
+        enemyDaddy.doMovement = null;
+    }
+
+    IEnumerator processTurn(){        
+        foreach(Slime s in enemyDaddy.slimeList){
+            yield return slimeTurn = StartCoroutine(doSlimeTurn(s));                            
+            
+        }
+
+        resolveEnemyTurn = null;
     }
 }
