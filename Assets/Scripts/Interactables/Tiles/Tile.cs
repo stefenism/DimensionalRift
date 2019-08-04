@@ -29,7 +29,8 @@ public class Tile : MonoBehaviour{
 
     void Update () {
         if(GameManager.gameDaddy.isPlayerTurn()){            
-            CheckMouseOver();                                        
+            CheckMouseOver();
+            CheckClick();
             if(isMoveable()){
                 doTileMoveable();
             }
@@ -41,7 +42,7 @@ public class Tile : MonoBehaviour{
             if(HeroManager.heroDaddy.selectedHero == null){
                 tileState = TileState.MOUSEOVER;
                 doMouseOverState();
-            }
+            }            
             else{
                 if(tileState == TileState.MOVEABLE){
                     tileState = TileState.SELECTMOVE;
@@ -61,6 +62,18 @@ public class Tile : MonoBehaviour{
                     tileState = TileState.MOVEABLE;
                     doTileMoveable();
                 }
+            }
+        }
+    }
+
+    void CheckClick(){
+        if(tileState == TileState.SELECTMOVE){
+            if(Input.GetMouseButtonDown(0)){
+                // Tile tileClicked = TileManager.getTileAt(MouseUtilities.getMouseWorldPosition());
+                // Debug.Log("the tile you clicked to move to is: " + TileManager.getTileAt(MouseUtilities.getMouseWorldPosition()).gameObject.name);
+                // Debug.Log("finding the movement"); 
+                // HeroManager.heroDaddy.getMovement(tileClicked);
+                HeroManager.heroDaddy.doMovement(this);
             }
         }
     }

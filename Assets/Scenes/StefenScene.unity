@@ -269,7 +269,7 @@ PrefabInstance:
     - target: {fileID: 1008969150053698133, guid: a56bdcee6b5d3df4480fd297792ebc91,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1008969150053698133, guid: a56bdcee6b5d3df4480fd297792ebc91,
         type: 3}
@@ -526,6 +526,7 @@ MonoBehaviour:
   heroList: []
   selectedHero: {fileID: 0}
   availableMoves: []
+  movements: []
   moveSearchList: []
 --- !u!1 &1937874353
 GameObject:
@@ -786,7 +787,7 @@ PrefabInstance:
     - target: {fileID: 1008969150053698133, guid: a56bdcee6b5d3df4480fd297792ebc91,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1008969150053698133, guid: a56bdcee6b5d3df4480fd297792ebc91,
         type: 3}

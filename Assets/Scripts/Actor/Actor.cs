@@ -27,6 +27,7 @@ public class Actor : MonoBehaviour {
 
     public void setReady(){actorState = ActorState.READY;}
     public void setMouseOver(){actorState = ActorState.MOUSEOVER;}
+    public void setFinished(){actorState = ActorState.FINISHED;}
 
     public Collider2D GetCollider(){return collider;}
 }
