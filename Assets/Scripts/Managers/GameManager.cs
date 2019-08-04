@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     GameState gameState = GameState.PLAYER_TURN;
 
     public static GameManager gameDaddy = null; //Static instance of GameManager allows it to be called from anywhere    
+    public ChangeTurnView turnView;
     void Awake(){
         //Check to see if there's a gameDaddy
         if(gameDaddy == null){
@@ -41,13 +42,16 @@ public class GameManager : MonoBehaviour
     static public void start_player_phase(){
         gameDaddy.gameState = GameState.PLAYER_TURN;
         HeroManager.startPlayerTurn();
+        gameDaddy.turnView.setPlayerTurn();
     }
     static public void start_enemy_phase(){
         gameDaddy.gameState = GameState.ENEMY_TURN;
         EnemyManager.doEnemyTurn();
+        gameDaddy.turnView.setEnemyTurn();
     }
     static public void start_placement_phase(){
         gameDaddy.gameState = GameState.PLACEMENT_PHASE;
         GridManager.startPlacementPhase();
+        gameDaddy.turnView.setPlacementTurn();
     }
 }
