@@ -25,6 +25,20 @@ public class HeroManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
+    void Update(){
+        checkAllMoves();
+    }
+
+    void checkAllMoves(){
+        foreach (Hero h in heroDaddy.heroList){
+            if(!h.isFinished()){
+                // Debug.Log("we ain't done yet");
+                return;
+            }
+        }
+        // Debug.Log("all heros are done");
+    }
+
     void getAvailableMoves(){
         Vector3 originalPosition = heroDaddy.selectedHero.transform.position;
         heroDaddy.checkAdjacentPositions(originalPosition);
@@ -129,12 +143,13 @@ public class HeroManager : MonoBehaviour {
     void resolve_instruction(MovementInstructions movement, Vector3 originalHeroPosition, int cycle){
         // Vector3 currentPosition = heroDaddy.selectedHero.transform.position;
         // currentPosition = Vector3.Lerp(currentPosition, movement.getTileList()[0].transform.position, 0.1f + cycle);
-        heroDaddy.selectedHero.transform.position = Vector3.Lerp(originalHeroPosition, movement.getTileList()[0].transform.position, 0.1f * cycle);
+        heroDaddy.selectedHero.transform.position = Vector3.Lerp(originalHeroPosition, movement.getTileList()[0].transform.position, 0.05f * cycle);
     }
 
     IEnumerator doInstruction(MovementInstructions currentMovement){
         Vector3 originalHeroPosition = heroDaddy.selectedHero.transform.position;
         int cycle = 0;
+        heroDaddy.selectedHero.setMoving();
         while(heroDaddy.selectedHero.transform.position != currentMovement.getTileList()[0].transform.position){
             resolve_instruction(currentMovement, originalHeroPosition, cycle);
             cycle += 1;

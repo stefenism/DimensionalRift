@@ -50,6 +50,11 @@ public class Hero : Actor {
                 anim.SetBool("March", false);
                 anim.SetBool("Finished", false);
                 break;
+            case ActorState.MOVING:
+                anim.SetBool("Ready", false);
+                anim.SetBool("March", true);
+                anim.SetBool("Finished", false);
+                break;
             case ActorState.FINISHED:
                 anim.SetBool("Ready", false);
                 anim.SetBool("March", false);
