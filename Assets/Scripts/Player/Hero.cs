@@ -11,7 +11,16 @@ public class Hero : Actor {
             if(isFinished()){
                 return;
             }
-            CheckMouseOver();
+            if(HeroManager.heroDaddy.selectedHero == null){
+                CheckMouseOver();
+            }
+            else if(HeroManager.heroDaddy.selectedHero != null){
+                if(HeroManager.heroDaddy.selectedHero != this){
+                    if(!HeroManager.heroDaddy.selectedHero.isMoving()){
+                        CheckMouseOver();
+                    }
+                }
+            }            
             CheckMouseClick();            
         }
     }    
@@ -29,7 +38,7 @@ public class Hero : Actor {
 
     void CheckMouseClick(){
         if(actorState == ActorState.MOUSEOVER){
-            if(HeroManager.heroDaddy.selectedHero != null){
+            if(HeroManager.heroDaddy.selectedHero != null){                
                 if(HeroManager.heroDaddy.selectedHero.isMoving()){
                     return;
                 }
@@ -130,6 +139,7 @@ public class Hero : Actor {
 
     IEnumerator destroyWait(int seconds){
         yield return new WaitForSeconds(seconds);
+        Debug.Log("hero has commited suicide");
         Destroy(this.gameObject);
     }
 
