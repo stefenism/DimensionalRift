@@ -62,10 +62,15 @@ public class GridManager : MonoBehaviour {
         removeCopiedThreeBy();        
     }
 
+    static public void startPlacementPhase(){
+        Debug.Log("placement phase has begun");
+    }
+
     static public void checkDeleteGrid(threeByGrid placedGrid){
         foreach (threeByGrid g in gridDaddy.threeByList){
             if(g.transform.position == placedGrid.transform.position){
                 if(g != placedGrid){
+                    g.deleteGrid();
                     Destroy(g.gameObject);
                     return;
                 }
@@ -135,6 +140,12 @@ public class GridManager : MonoBehaviour {
         if(!gridDaddy.threeByList.Contains(newGrid)){            
             gridDaddy.threeByList.Add(newGrid);
         }        
+    }
+
+    static public void removeThreeBy(threeByGrid removeGrid){
+        if(gridDaddy.threeByList.Contains(removeGrid)){
+            gridDaddy.threeByList.Remove(removeGrid);
+        }
     }
 
     static public List<threeByGrid> getThreeByList(){return gridDaddy.threeByList;}

@@ -118,6 +118,12 @@ public class HeroManager : MonoBehaviour {
         return null;
     }
 
+    static public void startPlayerTurn(){
+        foreach (Hero h in heroDaddy.heroList){
+            h.setReady();
+        }        
+    }
+
     static public void clearMove(){
         TileManager.resetTiles();
         heroDaddy.availableMoves.Clear();

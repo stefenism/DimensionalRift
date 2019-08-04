@@ -73,6 +73,7 @@ public class threeByGrid : MonoBehaviour {
             if(Input.GetMouseButtonDown(0)){
                 GridManager.checkDeleteGrid(this);
                 GridManager.setCurrentThreeBy(null);
+                GameManager.start_player_phase();
             }
         }
     }
@@ -111,6 +112,21 @@ public class threeByGrid : MonoBehaviour {
 
     void doSelectedState(){
         sprite.color = selectedColor;
+    }
+
+    public void deleteGrid(){
+        foreach(Tile t in gridTiles){
+            if(t.containedActor != null){
+                if(t.containedActor is Hero){
+                    HeroManager.removeHero((Hero)t.containedActor);
+                }
+                else if(t.containedActor is Slime){
+                    EnemyManager.removeSlime((Slime)t.containedActor);
+                }
+            }
+            TileManager.removeTile(t);
+        }
+        GridManager.removeThreeBy(this);
     }
 
     public bool isGridAtPosition(Vector3 position){
