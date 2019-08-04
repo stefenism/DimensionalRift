@@ -7,6 +7,7 @@ public class Actor : MonoBehaviour {
         MOUSEOVER,
         SELECTED,
         MOVING,
+        ATTACKING,
         FINISHED,
     }
 
@@ -25,11 +26,13 @@ public class Actor : MonoBehaviour {
     public bool isReady(){return actorState == ActorState.READY;}
     public bool isSelected(){return actorState == ActorState.SELECTED;}
     public bool isMoving(){return actorState == ActorState.MOVING;}
+    public bool isAttacking(){return actorState == ActorState.ATTACKING;}
     public bool isFinished(){return actorState == ActorState.FINISHED;}
 
     public void setReady(){actorState = ActorState.READY;}
     public void setMouseOver(){actorState = ActorState.MOUSEOVER;}
     public void setMoving(){actorState = ActorState.MOVING;}
+    public void setAttacking(){actorState = ActorState.ATTACKING;}
     public void setFinished(){actorState = ActorState.FINISHED;}
 
     public Collider2D GetCollider(){return collider;}
