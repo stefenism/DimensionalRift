@@ -54,8 +54,11 @@ public class HeroManager : MonoBehaviour {
 
     void checkAdjacentPositions(Vector3 positionToCheck, bool checkMoveable = true){
         if(movements.Count > 0){
-            if(getMovement(TileManager.getTileAt(positionToCheck)).isAttack()){
-                return;
+            MovementInstructions testMovement = getMovement(TileManager.getTileAt(positionToCheck));
+            if(testMovement != null){
+                if(testMovement.isAttack()){
+                    return;
+                }                
             }
         }        
         Vector3 up = new Vector3(positionToCheck.x, positionToCheck.y -1, positionToCheck.z);
