@@ -6,17 +6,23 @@ public class Hero : Actor {
 
     void Update(){
         if(GameManager.gameDaddy.isPlayerTurn()){
+            checkAnim();
+            if(isFinished()){
+                return;
+            }
             CheckMouseOver();
-            CheckMouseClick();
+            CheckMouseClick();            
         }
     }    
 
     void CheckMouseOver(){
-        if(collider.bounds.Contains (MouseUtilities.getMouseWorldPosition())){
-            doMouseOverState();
+        if(collider.bounds.Contains (MouseUtilities.getMouseWorldPosition())){            
+            doMouseOverState();            
         }
         else{
-            setReady();
+            if(actorState != ActorState.SELECTED){
+                setReady();
+            }            
         }
     }
 
@@ -26,6 +32,34 @@ public class Hero : Actor {
                 Debug.Log("You Clicked a hero!: " + gameObject.name);
                 HeroManager.setCurrentHero(this);                
             }
+        }        
+        if(Input.GetMouseButtonDown(1)){
+            Debug.Log("cancel hero move");
+            if(HeroManager.heroDaddy.selectedHero != null){
+                Debug.Log("cancel hero move initiated");
+                HeroManager.heroDaddy.selectedHero = null;
+                HeroManager.clearMove();
+            }
+        }        
+    }
+
+    void checkAnim(){
+        switch(actorState){
+            case ActorState.READY:
+                anim.SetBool("Ready", true);
+                anim.SetBool("March", false);
+                anim.SetBool("Finished", false);
+                break;
+            case ActorState.MOVING:
+                anim.SetBool("Ready", false);
+                anim.SetBool("March", true);
+                anim.SetBool("Finished", false);
+                break;
+            case ActorState.FINISHED:
+                anim.SetBool("Ready", false);
+                anim.SetBool("March", false);
+                anim.SetBool("Finished", true);
+                break;
         }
     }
 
