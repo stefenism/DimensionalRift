@@ -70,7 +70,8 @@ public class threeByGrid : MonoBehaviour {
             }            
         }
         else if(isDragged()){
-            if(Input.GetMouseButtonDown(0)){                
+            if(Input.GetMouseButtonDown(0)){
+                GridManager.checkDeleteGrid(this);
                 GridManager.setCurrentThreeBy(null);
             }
         }

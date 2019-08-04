@@ -70,8 +70,7 @@ public class EnemyManager : MonoBehaviour {
             if(checkTile.containedActor == null){
                 enemyDaddy.availableMoves.Add(checkTile);
             }
-            else if(checkTile.containedActor is Hero){
-                Debug.Log("ooh...that's a juicy move");
+            else if(checkTile.containedActor is Hero){                
                 enemyDaddy.availableMoves.Add(checkTile);
                 juiceMove = checkTile;
             }            
@@ -84,7 +83,7 @@ public class EnemyManager : MonoBehaviour {
         //otherwise move towards the closest hero
         if(juiceMove != null){
             //attack
-            slime.setAttacking();
+            slime.setAttackReady();
             return;
         }
         foreach(Tile t in availableMoves){
@@ -110,7 +109,7 @@ public class EnemyManager : MonoBehaviour {
         attackTile(left);
         attackTile(right);
 
-        slime.setReady();
+        // slime.setReady();
     }
 
     void attackTile(Vector3 tilePosition){
@@ -120,6 +119,7 @@ public class EnemyManager : MonoBehaviour {
             if(containedActor != null && containedActor is Hero){
                 //kill hero
                 Debug.Log("you killed a hero");
+                containedActor.kill();
             }
         }                
     }
@@ -163,9 +163,10 @@ public class EnemyManager : MonoBehaviour {
     }
 
     IEnumerator moveSlime(Slime slime, Tile tile){
-         Vector3 originalPosition = slime.transform.position;
+        Vector3 originalPosition = slime.transform.position;
         TileManager.getTileAt(originalPosition).containedActor = null;
         int cycle = 0;
+        slime.setMoving();
         while(slime.transform.position != tile.transform.position){
             slime.transform.position = Vector3.Lerp(originalPosition, tile.transform.position, 0.05f * cycle);
             cycle++;
@@ -173,14 +174,16 @@ public class EnemyManager : MonoBehaviour {
         }
         Tile newTile = TileManager.getTileAt(slime.transform.position);        
         slime.transform.SetParent(newTile.transform);
+        slime.setReady();
         newTile.containedActor = slime;
         doMovement = null;        
     }
 
     IEnumerator doSlimeTurn(Slime slime){
-        if(slime.isAttacking()){
-            enemyDaddy.attack(slime);            
-        }            
+        if(slime.isAttakReady()){            
+            slime.setAttacking();
+            enemyDaddy.attack(slime);
+        }
         else{
             // enemyDaddy.getAvailableMoves(slime);
             Vector3 originalPosition = slime.transform.position;
@@ -189,10 +192,9 @@ public class EnemyManager : MonoBehaviour {
             //go through moves
             //if move has a hero => attack
             //otherwise move towards the closest hero
-            if(juiceMove != null){
-                Debug.Log("the slime: " + slime.name + " got a juicy move!");
+            if(juiceMove != null){                
                 //attack
-                slime.setAttacking();
+                slime.setAttackReady();
                 if(slimeTurn != null){
                     StopCoroutine(slimeTurn);
                     slimeTurn = null;
@@ -200,17 +202,13 @@ public class EnemyManager : MonoBehaviour {
             }
             else{
                 Vector3 closestHero = getClosestHero(slime);
-                Tile bestTile = getBestTile(slime, closestHero);
-                Debug.Log("for the slime: " + slime.name + " the tile list is: ");
-                foreach(Tile t in enemyDaddy.availableMoves){
-                Debug.Log("tile choice: " + t);
-                }
+                Tile bestTile = getBestTile(slime, closestHero);                                
                 yield return doMovement = StartCoroutine(moveSlime(slime, bestTile));        
             }            
         }            
         enemyDaddy.availableMoves.Clear();
         enemyDaddy.juiceMove = null;
-        enemyDaddy.doMovement = null;
+        enemyDaddy.doMovement = null;        
     }
 
     IEnumerator processTurn(){        
