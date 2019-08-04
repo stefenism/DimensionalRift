@@ -194,22 +194,27 @@ public class EnemyManager : MonoBehaviour {
             // enemyDaddy.getAvailableMoves(slime);
             Vector3 originalPosition = slime.transform.position;
             enemyDaddy.checkAdjacentPositions(originalPosition);
-            // enemyDaddy.evaluateChoices(slime);
-            //go through moves
-            //if move has a hero => attack
-            //otherwise move towards the closest hero
-            if(juiceMove != null){                
-                //attack
-                slime.setAttackReady();
-                if(slimeTurn != null){
-                    StopCoroutine(slimeTurn);
-                    slimeTurn = null;
-                }                
+            if(enemyDaddy.availableMoves.Count <= 0){
+                Debug.Log("AINT NO FRIGGAN MOVES");                
             }
             else{
-                Vector3 closestHero = getClosestHero(slime);
-                Tile bestTile = getBestTile(slime, closestHero);                                
-                yield return doMovement = StartCoroutine(moveSlime(slime, bestTile));        
+                // enemyDaddy.evaluateChoices(slime);
+                //go through moves
+                //if move has a hero => attack
+                //otherwise move towards the closest hero
+                if(juiceMove != null){                
+                    //attack
+                    slime.setAttackReady();
+                    if(slimeTurn != null){
+                        StopCoroutine(slimeTurn);
+                        slimeTurn = null;
+                    }                
+                }
+                else{
+                    Vector3 closestHero = getClosestHero(slime);
+                    Tile bestTile = getBestTile(slime, closestHero);                                
+                    yield return doMovement = StartCoroutine(moveSlime(slime, bestTile));        
+                }            
             }            
         }            
         enemyDaddy.availableMoves.Clear();
