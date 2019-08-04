@@ -16,9 +16,9 @@ public class threeByGrid : MonoBehaviour {
     GridState gridState = GridState.IDLE;
 
     Color defaultColor = new Color(1, 1, 1, 0);
-    Color selectedColor = new Color(0.48f, 1, 0, 1);
+    Color selectedColor = new Color(0.48f, 1, 0, .42f);
 
-    Color draggedColor = new Color(1, 0.45f, 0, 1);
+    Color draggedColor = new Color(1, 0.45f, 0, .42f);
 
     public List<Tile> gridTiles = new List<Tile>();
 
