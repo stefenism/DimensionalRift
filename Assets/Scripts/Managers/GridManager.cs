@@ -116,10 +116,11 @@ public class GridManager : MonoBehaviour {
         }
     }
 
-    static public void removeCopiedThreeBy(){
+    static public void removeCopiedThreeBy(){        
         gridDaddy.threeByList.Remove(gridDaddy.copiedThreeBy);
+        gridDaddy.copiedThreeBy.deleteGrid();
         Destroy(gridDaddy.copiedThreeBy.gameObject);
-        gridDaddy.copiedThreeBy = null;
+        gridDaddy.copiedThreeBy = null;        
     }
     void set_select_grid(){placementState = PlacementState.SELECT_GRID;}
     void start_place_grid(){placementState = PlacementState.PLACE_GRID;}
