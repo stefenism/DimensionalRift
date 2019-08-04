@@ -29,7 +29,12 @@ public class Hero : Actor {
 
     void CheckMouseClick(){
         if(actorState == ActorState.MOUSEOVER){
-            if(Input.GetMouseButtonDown(0)){                
+            if(HeroManager.heroDaddy.selectedHero != null){
+                if(HeroManager.heroDaddy.selectedHero.isMoving()){
+                    return;
+                }
+            }
+            if(Input.GetMouseButtonDown(0)){
                 Debug.Log("You Clicked a hero!: " + gameObject.name);
                 HeroManager.setCurrentHero(this);                
             }

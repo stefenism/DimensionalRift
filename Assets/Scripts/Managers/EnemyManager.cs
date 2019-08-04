@@ -25,8 +25,13 @@ public class EnemyManager : MonoBehaviour {
     }
 
     void Update(){
-        if(Input.GetKeyDown(KeyCode.F)){
-            doEnemyTurn();
+        CheckEnemies();        
+    }
+
+    void CheckEnemies(){
+        if(enemyDaddy.slimeList.Count <= 0){
+            Debug.Log("win game");
+            GameManager.gameDaddy.endGamePrompt.SetActive(true);
         }
     }
 
