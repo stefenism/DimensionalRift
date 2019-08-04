@@ -49,16 +49,33 @@ public class Hero : Actor {
                 anim.SetBool("Ready", true);
                 anim.SetBool("March", false);
                 anim.SetBool("Finished", false);
+                anim.SetBool("Selected", false);
                 break;
             case ActorState.MOVING:
                 anim.SetBool("Ready", false);
                 anim.SetBool("March", true);
                 anim.SetBool("Finished", false);
+                anim.SetBool("Selected", false);
                 break;
             case ActorState.FINISHED:
                 anim.SetBool("Ready", false);
                 anim.SetBool("March", false);
                 anim.SetBool("Finished", true);
+                anim.SetBool("Selected", false);
+                break;
+            case ActorState.MOUSEOVER:
+                anim.SetBool("Ready", false);
+                anim.SetBool("March", false);
+                anim.SetBool("Finished", false);
+                anim.SetBool("Selected", true);
+                break;
+            case ActorState.SELECTED:
+                anim.SetBool("Ready", false);
+                anim.SetBool("March", false);
+                anim.SetBool("Finished", false);
+                anim.SetBool("Selected", true);
+                break;
+            default:
                 break;
         }
     }
