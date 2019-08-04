@@ -37,6 +37,7 @@ public class HeroManager : MonoBehaviour {
         if(heroDaddy.heroList.Count <= 0){
             Debug.Log("lose game");
             SceneManager.LoadScene( SceneManager.GetActiveScene().buildIndex);
+            // GameManager.gameDaddy.endGamePrompt.SetActive(true);
         }
     }
 
