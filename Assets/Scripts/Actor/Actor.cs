@@ -25,6 +25,15 @@ public class Actor : MonoBehaviour {
         anim = GetComponent<Animator>();
     }
 
+    public void setSpriteOrder(bool above = true){
+        if(above){
+            sprite.sortingLayerName = "Above";
+        }
+        else{
+            sprite.sortingLayerName = "Default";
+        }
+    }
+
     public virtual void kill(){}
     public bool isReady(){return actorState == ActorState.READY;}
     public bool isSelected(){return actorState == ActorState.SELECTED;}
