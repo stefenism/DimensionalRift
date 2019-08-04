@@ -11,7 +11,7 @@ public class Tile : MonoBehaviour{
         SELECTMOVE,
     }
 
-    SpriteRenderer sprite;
+    public SpriteRenderer sprite;
     Collider2D collider;
     TileState tileState = TileState.IDLE;
 
@@ -75,6 +75,26 @@ public class Tile : MonoBehaviour{
                 // HeroManager.heroDaddy.getMovement(tileClicked);
                 HeroManager.heroDaddy.doMovement(this);
             }
+        }
+    }
+
+    public void setSpriteOrder(bool above = true){
+        if(above){
+            if(containedActor != null){
+                containedActor.setSpriteOrder();
+            }
+            Debug.Log("setting sorting order for sprite: " + this.name);
+            // Debug.Log("this guys sprite is: " + sprite);
+            // if(sprite != null){
+                sprite.sortingLayerName = "Above"; 
+            // }            
+            // GetComponent<SpriteRenderer>().sortingOrder += 1;
+        }
+        else{
+            if(containedActor != null){
+                containedActor.setSpriteOrder(false);
+            }
+            sprite.sortingLayerName = "Default";
         }
     }
 

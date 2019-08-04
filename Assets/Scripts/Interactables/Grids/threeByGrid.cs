@@ -65,7 +65,7 @@ public class threeByGrid : MonoBehaviour {
         if(this.gridState == GridState.MOUSEOVER){
             if(Input.GetMouseButtonDown(0)){                
                 if(GridManager.getCurrentThreeBy() == null && GameManager.gameDaddy.isPlacementPhase()){
-                    GridManager.setCurrentThreeBy(this);
+                    GridManager.setCurrentThreeBy(this);                    
                 }
             }            
         }
@@ -74,6 +74,7 @@ public class threeByGrid : MonoBehaviour {
                 GridManager.checkDeleteGrid(this);
                 GridManager.setCurrentThreeBy(null);
                 GameManager.start_player_phase();
+                this.setSpriteOrder(false);
             }
         }
     }
@@ -95,6 +96,23 @@ public class threeByGrid : MonoBehaviour {
             gridTiles.Add(t);
             t.checkActors();
             TileManager.addTile(t);
+        }
+    }
+
+    public void setSpriteOrder(bool above = true){
+        if(above){
+            foreach(Tile t in gridTiles){
+                t.setSpriteOrder();
+            }
+            // if(sprite != null){
+                sprite.sortingLayerName = "Above";
+            // }            
+        }
+        else{
+            foreach(Tile t in gridTiles){
+                t.setSpriteOrder(false);
+            }
+            sprite.sortingLayerName = "Default";
         }
     }
 

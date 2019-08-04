@@ -33,6 +33,7 @@ public class GridManager : MonoBehaviour {
         copiedThreeBy = Object.Instantiate(selectedGrid) as threeByGrid;
         copiedThreeBy.transform.SetParent(selectedGrid.transform.parent);
         copiedThreeBy.setGridDragged();
+        // copiedThreeBy.setSpriteOrder();
     }
 
     void getAvailablePlacementPositions(){
